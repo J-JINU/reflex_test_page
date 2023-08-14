@@ -3,8 +3,20 @@ import reflex as rx
 class ReflextestpageConfig(rx.Config):
     pass
 
-config = ReflextestpageConfig(
-    app_name="reflex_test_page",
-    db_url="sqlite:///reflex.db",
-    env=rx.Env.DEV,
+config = rx.Config(
+    app_name = "reflex_test_page",
+    db_config = rx.DBConfig(
+        engine = "postgresql+psycopg2",
+        username = "your-db-username",
+        password = "your-db-password",
+        host = "localhost",
+        port = 5432,
+        database = "reflex"
+    )
 )
+
+# config = ReflextestpageConfig(
+#     app_name="reflex_test_page",
+#     db_url="sqlite:///reflex.db",
+#     env=rx.Env.DEV,
+# )
