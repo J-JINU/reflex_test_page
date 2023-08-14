@@ -7,11 +7,11 @@ config = rx.Config(
     app_name = "reflex_test_page",
     db_config = rx.DBConfig(
         engine = "postgresql+psycopg2",
-        username = "your-db-username",
+        username = "test_",
         password = "your-db-password",
         host = "localhost",
         port = 5432,
-        database = "reflex"
+        database = "reflexdb"
     )
 )
 
