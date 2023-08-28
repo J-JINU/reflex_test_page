@@ -4,6 +4,7 @@ class ReflextestpageConfig(rx.Config):
     pass
 
 config = rx.Config(
+    frontend_port=3000,
     app_name = "reflex_test_page",
     db_config = rx.DBConfig(
         engine = "postgresql+psycopg2",

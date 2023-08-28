@@ -94,6 +94,7 @@
 /site
 ENV/
 MANIFEST
+secret/
 __pycache__/
 __pypackages__/
 build/
