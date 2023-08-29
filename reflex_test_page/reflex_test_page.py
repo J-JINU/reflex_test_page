@@ -33,9 +33,58 @@ class MainState(rx.State):
 
 
 class SignUpState(MainState):
-    loadingText: str = ""
-    pass
+    email: str = ""
+    password: str = ""
+    handle: str = ""
+    placeEmail: str = "Email"
+    placePassword: str = "Password (min. 6char)"
+    placeHandle: str = "Handle"
+    borderEmail: str = "" 
+    borderPassword: str = ""
+    borderHandle: str = ""
     
+    btnName: str = "Sign Up"
+    isLoading: bool = False
+    isDisabled: bool = False
+    loadingText: str = "Please wait ..."
+    
+    def get_signup_email(self, email):
+        self.email = email
+        
+    def get_signup_password(self, password):
+        self.password = password
+    
+    def get_signup_handle(self, handle):
+        self.handle = handle
+    
+    def auth_user_email(self):
+        pass
+    
+    def auth_user_handle(self):
+        pass
+    
+    def authenticate_user(self):
+        pass
+    
+    def validate_user(self):
+        pass
+    
+    async def run_button_loader(self):
+        pass
+    
+    async def stop_button_loader(self):
+        pass
+    
+    def restart_page(self):
+        self.email = ""
+        self.password = ""
+        self.handle = ""
+        self.placeEmail = "Email"
+        self.placePassword = "Password (min. 6char)"
+        self.placeHandle = "Handle"
+        self.borderEmail = ""
+        self.borderPassword = ""
+        self.borderHandle = ""
 
 class LoginState(MainState):
     email: str = ""
@@ -51,6 +100,9 @@ class LoginState(MainState):
     
     def get_login_password(self, password):
         self.password = password
+        
+    def auth_user_data(self):
+        pass
     
     def restart_page(self):
         self.email = ""
@@ -127,9 +179,61 @@ class PageView:
         return self.stack
 
 
-@rx.route("/signup")
+@rx.route("/signup", on_load=SignUpState.restart_page)
 def signup():
-    return rx.text("hello world!")
+    components: list = [
+        rx.heading("Reflex SignUp Form"),
+        rx.container(rx.text(signup_welcome)),
+        rx.vstack(
+            rx.spacer(),
+            CustomInputs(
+                SignUpState.placeEmail,
+                "text",
+                SignUpState.email,
+                SignUpState.get_signup_email,
+                SignUpState.borderEmail,
+            ),
+            CustomInputs(
+                SignUpState.placePassword,
+                "password",
+                SignUpState.password,
+                SignUpState.get_signup_password,
+                SignUpState.borderPassword,
+            ),
+            CustomInputs(
+                SignUpState.placeHandle,
+                "handle",
+                SignUpState.handle,
+                SignUpState.get_signup_handle,
+                SignUpState.borderHandle,
+            ),
+            CustomButton(
+                [rx.text(SignUpState.btnName)],
+                SignUpState.isLoading,
+                SignUpState.isDisabled,
+                [
+                    SignUpState.run_button_loader,
+                    SignUpState.authenticate_user,
+                    SignUpState.stop_button_loader,
+                ],
+                "",
+            ),
+            width="100%",
+            height="22rem",
+            justify_content="center",
+            spacing="1.35rem",
+        ),
+        rx.hstack(
+            rx.text("New to Reflex? Join "),
+            rx.text(rx.link("here", href="/signup")),
+            width="100%",
+            height="8rem",
+            justify_content="center",
+        ),
+    ]
+    signup = PageView(components)
+    
+    return signup.bulid()
 
 @rx.route("/", on_load=LoginState.restart_page)
 def login():
@@ -153,12 +257,25 @@ def login():
                 LoginState.borderPassword,
             ),
             CustomButton(
-                
+                [rx.text(LoginState.btnName)],
+                False,
+                False,
+                [
+                    LoginState.auth_user_data,
+                ],
+                "",
             ),
-            # width="100%",
+            width="100%",
             height="15rem",
             justify_content="center",
             spacing="1.35rem",
+        ),
+        rx.hstack(
+            rx.text("New to Reflex? Join "),
+            rx.text(rx.link("here", href="/signup")),
+            width="100%",
+            height="8rem",
+            justify_content="center",
         ),
     ]
     login = PageView(components)
@@ -177,17 +294,17 @@ style = {
         "text_align" : "center",
         "transition" : "all 750ms ease",
     },
-    # CustomInputs: {
-    #     "width": ["85%", "85%", "60%", "45%", "35%"],
-    #     "height": "3.25rem",
-    #     "transition": "all 550ms ease",
-    #     "_hover": {"box_shadow": "0 3px 6px 0 rgba(90, 116, 148, 0.2)"},
-    # },
-    # CustumButton: {
-    #     "width": ["85%", "85%", "60%", "45%", "35%"],
-    #     "height": "4rem",
-    #     "transition": "all 550ms ease",
-    # },
+    CustomInputs: {
+        "width": ["85%", "85%", "60%", "45%", "35%"],
+        "height": "3.25rem",
+        "transition": "all 550ms ease",
+        "_hover": {"box_shadow": "0 3px 6px 0 rgba(90, 116, 148, 0.2)"},
+    },
+    CustomButton: {
+        "width": ["85%", "85%", "60%", "45%", "35%"],
+        "height": "4rem",
+        "transition": "all 550ms ease",
+    },
 }
 
 
